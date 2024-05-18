@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Upload</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    text-align: center;
+  }
+  input[type="file"] {
+    display: none;
+  }
+  label {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+</style>
+</head>
+<body>
+<h2>Upload Image</h2>
+
+<input type="file" id="upload" accept="image/*">
+<label for="upload">Upload Image</label>
+<input type="number" id="numRectangles" placeholder="Enter number of rectangles" min="1" max="100" value="30">
+<button onclick="createImageGrid()">Create Image Grid</button>
+<br><br>
+<img id="uploadedImage" style="display:none; max-width:100%; height:auto;" alt="Uploaded Image">
+
+<script>
+  document.getElementById('upload').addEventListener('change', function() {
+    var fileInput = document.getElementById('upload');
+    if (fileInput.files && fileInput.files[0]) {
+      var file = fileInput.files[0];
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var uploadedImage = document.getElementById('uploadedImage');
+        uploadedImage.src = e.target.result;
+        uploadedImage.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  function createImageGrid() {
+    var fileInput = document.getElementById('upload');
+    var numRectangles = parseInt(document.getElementById('numRectangles').value);
+    if (fileInput.files && fileInput.files[0]) {
+      var file = fileInput.files[0];
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var imgData = e.target.result;
+        sessionStorage.setItem('imgData', imgData);
+        sessionStorage.setItem('numRectangles', numRectangles);
+        window.location.href = 'output.html';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      alert('Please upload an image first.');
+    }
+  }
+</script>
+</body>
+</html>
