@@ -4,142 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Output Image</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    text-align: center;
-  }
-  canvas {
-    border: 1px solid black;
-  }
-</style>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <h2>Output Image</h2>
-<canvas id="canvas"></canvas>
+<div class="square-container">
+  <canvas id="canvas"></canvas>
+</div>
 <br>
 <a id="downloadLink" style="display:none;">Download Transformed Image</a>
 <br><br>
 <button onclick="goBack()">Back</button>
 
-<script>
-  function goBack() {
-    window.location.href = 'index.html';
-  }
-
-  function generateOrder(numRectangles) {
-    var order = [];
-    for (var i = 1; i <= numRectangles; i++) {
-      if (i % 2 === 1) {
-        order.push((i + 1) / 2);
-      } else {
-        order.push(numRectangles - i / 2 + 1);
-      }
-    }
-    return order;
-  }
-
-  function drawGrid(img, numRectangles) {
-    var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
-
-    // Create an offscreen canvas for the grid transformation
-    var offscreenCanvas = document.createElement('canvas');
-    var offscreenCtx = offscreenCanvas.getContext('2d');
-
-    // Set offscreen canvas size to original image dimensions
-    offscreenCanvas.width = img.width;
-    offscreenCanvas.height = img.height;
-
-    // Calculate half width and height for the grid
-    var halfWidth = img.width / 2;
-    var halfHeight = img.height / 2;
-
-    // Clear the offscreen canvas
-    offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
-
-    // Draw the original image in the top-left quadrant
-    offscreenCtx.drawImage(img, 0, 0, img.width, img.height, 0, 0, halfWidth, halfHeight);
-
-    // Draw horizontally flipped image in the top-right quadrant
-    offscreenCtx.save();
-    offscreenCtx.scale(-1, 1);
-    offscreenCtx.drawImage(img, 0, 0, img.width, img.height, -img.width, 0, halfWidth, halfHeight);
-    offscreenCtx.restore();
-
-    // Draw vertically flipped image in the bottom-left quadrant
-    offscreenCtx.save();
-    offscreenCtx.scale(1, -1);
-    offscreenCtx.drawImage(img, 0, 0, img.width, img.height, 0, -img.height, halfWidth, halfHeight);
-    offscreenCtx.restore();
-
-    // Draw both horizontally and vertically flipped image in the bottom-right quadrant
-    offscreenCtx.save();
-    offscreenCtx.scale(-1, -1);
-    offscreenCtx.drawImage(img, 0, 0, img.width, img.height, -img.width, -img.height, halfWidth, halfHeight);
-    offscreenCtx.restore();
-
-    // Set main canvas size to original image dimensions
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    // Clear the main canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Calculate the width of each vertical rectangle
-    var rectWidth = img.width / numRectangles;
-
-    // Generate the rearrangement order for vertical splitting
-    var order = generateOrder(numRectangles);
-
-    // Create another offscreen canvas to hold the vertically rearranged image
-    var verticalCanvas = document.createElement('canvas');
-    var verticalCtx = verticalCanvas.getContext('2d');
-    verticalCanvas.width = img.width;
-    verticalCanvas.height = img.height;
-
-    // Draw the rearranged vertical rectangles on the verticalCanvas
-    for (var i = 0; i < numRectangles; i++) {
-      var srcX = (order[i] - 1) * rectWidth;
-      var destX = i * rectWidth;
-      verticalCtx.drawImage(offscreenCanvas, srcX, 0, rectWidth, img.height, destX, 0, rectWidth, img.height);
-    }
-
-    // Calculate the height of each horizontal rectangle
-    var rectHeight = img.height / numRectangles;
-
-    // Generate the rearrangement order for horizontal splitting
-    var horizontalOrder = generateOrder(numRectangles);
-
-    // Draw the rearranged horizontal rectangles on the main canvas
-    for (var i = 0; i < numRectangles; i++) {
-      var srcY = (horizontalOrder[i] - 1) * rectHeight;
-      var destY = i * rectHeight;
-      ctx.drawImage(verticalCanvas, 0, srcY, img.width, rectHeight, 0, destY, img.width, rectHeight);
-    }
-
-    // Setup the download link
-    var downloadLink = document.getElementById('downloadLink');
-    downloadLink.href = canvas.toDataURL('image/png');
-    downloadLink.download = 'transformed-image.png';
-    downloadLink.textContent = 'Download Transformed Image';
-    downloadLink.style.display = 'inline';
-  }
-
-  window.onload = function() {
-    var imgData = sessionStorage.getItem('imgData');
-    var numRectangles = parseInt(sessionStorage.getItem('numRectangles'));
-    if (imgData && numRectangles) {
-      var img = new Image();
-      img.onload = function() {
-        drawGrid(img, numRectangles);
-      };
-      img.src = imgData;
-    } else {
-      alert('No image data found. Please go back and upload an image.');
-    }
-  };
-</script>
+<script src="script.js"></script>
 </body>
 </html>

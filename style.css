@@ -1,0 +1,45 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  text-align: center;
+}
+.square-container {
+  width: 80%;
+  height: 80vh;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #4CAF50;
+}
+.square-container img {
+  max-width: 100%;
+  max-height: 100%;
+  display: none;
+}
+input[type="file"] {
+  display: none;
+}
+label {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  display: inline-block;
+  margin-top: 20px;
+}
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+  margin-top: 20px;
+}
+canvas {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
